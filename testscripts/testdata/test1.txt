@@ -1,0 +1,38 @@
+# hello world
+parse
+stdout 'package svc'
+stdout '"context"'
+! stderr .
+cmp improved_service_expected.go improved_service.go
+
+-- service.go --
+package svc
+
+import (
+    "context"
+    "time"
+
+    "test/external"
+    "encore.dev/cron"
+)
+
+var _ = cron.NewJob("job-id", cron.JobConfig{
+    Title:    "My Title",
+    Every:    5 * cron.Minute,
+    Endpoint: external.Endpoint,
+})
+
+-- improved_service_expected.go --
+package svc
+
+import (
+    "context"
+    "time"
+
+package svc
+
+import (
+    "context"
+    "time"
+
+-- other.txt --
