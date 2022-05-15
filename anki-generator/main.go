@@ -20,7 +20,7 @@ const sectionSeparator = "----"
 const okMarker = "(OK)"
 
 type Option struct {
-	Label     string
+	Label     template.HTML
 	IsCorrect bool
 }
 
@@ -60,7 +60,7 @@ func parseMultipleChoice(question string, answerPart string) (string, string, bo
 
 	for _, o := range strings.Split(strings.TrimSpace(answerPart), "\n") {
 		data.Options = append(data.Options, Option{
-			Label:     strings.ReplaceAll(o, okMarker, ""),
+			Label:     template.HTML(strings.ReplaceAll(o, okMarker, "")),
 			IsCorrect: strings.Contains(o, okMarker),
 		})
 	}
@@ -117,8 +117,8 @@ func parseInput(input string) [][]string {
 }
 
 func main() {
-	targetFile := "review_2.txt"
-	parseTestHTML("review_2.html", targetFile)
+	targetFile := "review_5.txt"
+	parseTestHTML("cda_1.html", targetFile)
 	createCSV(targetFile)
 }
 
@@ -186,8 +186,6 @@ func parseTestHTML(filename, output string) {
 		case strings.Contains(s, "wpProQuiz_question_text"):
 			nextIsQuestion = true
 		case nextIsQuestion:
-			//_, after, _ := strings.Cut(s, ">")
-			//before, _, _ := strings.Cut(after, "<")
 			s = RemoveHtmlTag(s)
 			out = noteSeparator + "\n" + s + "\n" + sectionSeparator
 			nextIsQuestion = false
