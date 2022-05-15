@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -10,6 +11,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-xray-sdk-go/instrumentation/awsv2"
+	"github.com/aws/aws-xray-sdk-go/xray"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -25,6 +29,15 @@ type Item struct {
 }
 
 func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) (string, error) {
+	_, seg := xray.BeginSegment(ctx, "AWSSDKV2_Dynamodb")
+	defer seg.Close(nil)
+
+	_, subSeg := xray.BeginSubsegment(ctx, "subsegment-anme")
+	subSeg.Close(nil)
+
+	_, subSeg2 := xray.BeginSubsegment(ctx, "subsegment-anme-error")
+	subSeg2.Close(errors.New("something bad happened"))
+
 	b2, _ := json.MarshalIndent(request, "", "  ")
 	fmt.Println(string(b2))
 	//return string(b2), nil
@@ -33,23 +46,10 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	//s := fmt.Sprintf("%t %q\n", pathWithID.MatchString(request.Path), request.Path)
 
 	var body interface{}
-	cfg, err := config.LoadDefaultConfig(context.TODO(), func(o *config.LoadOptions) error {
-		o.Region = "us-east-1"
-		return nil
-	})
-	if err != nil {
-		return "", fmt.Errorf("LoadDefaultConfig: %w", err)
-	}
-	svc := dynamodb.NewFromConfig(cfg)
-
-	if err != nil {
-		return "", fmt.Errorf("LoadDefaultConfig: %w", err)
-	}
-
 	switch request.RequestContext.RouteKey {
 	case "DELETE /items/{id}":
 		id := request.PathParameters["id"]
-		_, err := svc.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+		_, err := db.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 			TableName: aws.String(tableName),
 			Key: map[string]types.AttributeValue{
 				"id": &types.AttributeValueMemberS{Value: id},
@@ -61,7 +61,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		body = fmt.Sprintf("Deleted item %q", id)
 	case "GET /items/{id}":
 		id := request.PathParameters["id"]
-		out, err := svc.GetItem(ctx, &dynamodb.GetItemInput{
+		out, err := db.GetItem(ctx, &dynamodb.GetItemInput{
 			TableName: aws.String(tableName),
 			Key: map[string]types.AttributeValue{
 				"id": &types.AttributeValueMemberS{Value: id},
@@ -72,7 +72,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 		}
 		body = out.Item
 	case "GET /items":
-		out, err := svc.Scan(ctx, &dynamodb.ScanInput{
+		out, err := db.Scan(ctx, &dynamodb.ScanInput{
 			TableName: aws.String(tableName),
 		})
 		if err != nil {
@@ -86,7 +86,7 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 			return "", err
 		}
 
-		_, err = svc.PutItem(ctx, &dynamodb.PutItemInput{
+		_, err = db.PutItem(ctx, &dynamodb.PutItemInput{
 			TableName: aws.String(tableName),
 			Item: map[string]types.AttributeValue{
 				"id":    &types.AttributeValueMemberS{Value: i.ID},
@@ -110,6 +110,19 @@ func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	return string(b), err
 }
 
+var db *dynamodb.Client
+
 func main() {
+	cfg, err := config.LoadDefaultConfig(context.TODO(), func(o *config.LoadOptions) error {
+		o.Region = "us-east-1"
+		return nil
+	})
+	if err != nil {
+		log.Fatalf("LoadDefaultConfig: %s\n", err)
+	}
+	// Instrumenting AWS SDK v2
+	awsv2.AWSV2Instrumentor(&cfg.APIOptions)
+
+	db = dynamodb.NewFromConfig(cfg)
 	lambda.Start(HandleRequest)
 }
