@@ -1,0 +1,135 @@
+digraph "Diagram" {
+  splines = "ortho";
+  pad = "1.0";
+  nodesep = "0.60";
+  ranksep = "0.75";
+  fontname = "Sans-Serif";
+  fontsize = "15";
+  dpi = "200";
+  rankdir = "BT";
+  compound = "true";
+  fontcolor = "#222222";
+  edge [
+    color = "#D5871488",
+    penwidth = 2,
+    arrowhead = "dot",
+    arrowtail = "dot",
+  ];
+  node [
+    shape = "box",
+    style = "rounded",
+    fixedsize = true,
+    width = 1.7,
+    height = 1.7,
+    labelloc = "c",
+    imagescale = true,
+    fontname = "Sans-Serif",
+    fontsize = 8,
+    margin = 8,
+  ];
+  subgraph "Widgets" {
+    subgraph "cluster-SubGraph.Widgets" {
+      graph [
+        label = "Widgets",
+        labelloc = "b",
+        labeljust = "l",
+        margin = "10",
+        fontsize = "16",
+        penwidth = "2",
+        pencolor = "#888888",
+        style = "filled,rounded",
+        fillcolor = "#e4e4e4",
+      ];
+      "Widgets/WidgetStore" [
+        label = " WidgetStore",
+        fontsize = 12,
+        image = "/Users/magnus/repo/magnuswahlstrand/experiments/aws/typescript-serverless/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 2,
+        height = 2.266,
+      ];
+      "Widgets/WidgetHandler" [
+        label = " WidgetHandler",
+        fontsize = 12,
+        image = "/Users/magnus/repo/magnuswahlstrand/experiments/aws/typescript-serverless/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 2,
+        height = 2.266,
+      ];
+      "Widgets/userTable" [
+        label = " userTable",
+        fontsize = 12,
+        image = "/Users/magnus/repo/magnuswahlstrand/experiments/aws/typescript-serverless/node_modules/cdk-dia/icons/aws/Service/Arch_Database/64/Arch_Amazon-DynamoDB_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.466,
+      ];
+      "Widgets/DynamoDBLogger" [
+        label = " DynamoDBLogger",
+        fontsize = 12,
+        image = "/Users/magnus/repo/magnuswahlstrand/experiments/aws/typescript-serverless/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 2,
+        height = 2.266,
+      ];
+      "Widgets/deadLetterQueue" [
+        label = " deadLetterQueue",
+        fontsize = 12,
+        image = "/Users/magnus/repo/magnuswahlstrand/experiments/aws/typescript-serverless/node_modules/cdk-dia/icons/aws/Service/Arch_App-Integration/Arch_64/Arch_AWS-Simple-Queue-Service_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 2,
+        height = 2.266,
+      ];
+      "Widgets/widgets-api-v2" [
+        label = " widgets-api-v2",
+        fontsize = 12,
+        image = "/Users/magnus/repo/magnuswahlstrand/experiments/aws/typescript-serverless/node_modules/cdk-dia/icons/aws/Service/Arch_Networking-Content/64/Arch_Amazon-API-Gateway_64@5x.png",
+        imagescale = "true",
+        imagepos = "tc",
+        penwidth = "0",
+        shape = "node",
+        fixedsize = "true",
+        labelloc = "b",
+        width = 1.2,
+        height = 1.466,
+      ];
+    }
+  }
+  "Widgets/WidgetHandler" -> "Widgets/WidgetStore" [
+    dir = "both",
+  ];
+  "Widgets/DynamoDBLogger" -> "Widgets/userTable" [
+    dir = "both",
+  ];
+  "Widgets/DynamoDBLogger" -> "Widgets/deadLetterQueue" [
+    dir = "both",
+  ];
+  "Widgets/widgets-api-v2" -> "Widgets/WidgetHandler" [
+    dir = "both",
+  ];
+}
