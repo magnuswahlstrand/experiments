@@ -1,20 +1,52 @@
-import {DynamoDBStreamHandler,} from 'aws-lambda';
-import {unmarshall} from "@aws-sdk/util-dynamodb";
-// const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
+import {APIGatewayProxyHandlerV2} from 'aws-lambda';
+
+import {DynamoDBClient} from "@aws-sdk/client-dynamodb";
+import {DynamoDBDocumentClient, PutCommand} from "@aws-sdk/lib-dynamodb";
+
+const tableName = process.env.USERS_TABLE;
+
+const client = new DynamoDBClient({});
+const ddbDocClient = DynamoDBDocumentClient.from(client); // client is DynamoDB client
 
 
-const bucketName = process.env.BUCKET;
+export const create_user: APIGatewayProxyHandlerV2 = async function (event) {
+    console.log(event)
 
-export const dynamo_handler: DynamoDBStreamHandler = async function (event, context) {
-    event.Records.map(e => {
-        console.log("EVENT")
-        console.log(e.eventName)
-        console.log(e.userIdentity)
-        console.log(e.dynamodb)
-        if (e?.dynamodb?.NewImage) {
-            console.log(unmarshall(e.dynamodb.NewImage))
+    if (!event?.queryStringParameters) {
+        return {
+            statusCode: 400,
+            body: "query param missing"
         }
-    })
-}
+    }
 
-// https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/modules/_aws_sdk_util_dynamodb.html
+
+    if (!event.queryStringParameters['id']) {
+        return {
+            statusCode: 400,
+            body: "query param missing"
+        }
+    }
+
+
+    const id = event.queryStringParameters['id']
+
+    const resp = await ddbDocClient.send(
+        new PutCommand({
+            TableName: tableName,
+            Item: {
+                userId: id,
+                id: id,
+                content: "content from DynamoDBDocument"
+            }
+        }))
+
+    console.log("resp")
+    console.log(resp)
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify({
+            'name': 'Magnus',
+        }),
+    }
+}
