@@ -1,0 +1,3 @@
+### GET request with parameter
+GET http://localhost:8080/hello?input=%7B%22name%22%3A%22Magnus%22%7D
+Accept: application/json
