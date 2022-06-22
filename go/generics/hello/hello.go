@@ -2,7 +2,7 @@ package hello
 
 import (
 	"fmt"
-	"github.com/magnuswahlstrand/generics/pkg"
+	"github.com/magnuswahlstrand/generics/rpc"
 )
 
 type Req struct {
@@ -17,4 +17,4 @@ func HelloWorld(req Req) (Resp, error) {
 	return Resp{Greeting: fmt.Sprintf("Hello, %s!", req.Name)}, nil
 }
 
-var Handler, HelloClient = pkg.Constructor(HelloWorld)
+var RPC = rpc.New(HelloWorld)

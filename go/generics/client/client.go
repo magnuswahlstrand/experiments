@@ -7,7 +7,9 @@ import (
 )
 
 func main() {
-	resp, err := hello.HelloClient("http://localhost:8080", "hello", hello.Req{Name: "Magnus"})
+	client := hello.RPC.NewClient("http://localhost:8080")
+
+	resp, err := client.Call("hello", hello.Req{Name: "Magnus"})
 	if err != nil {
 		log.Fatalln(err)
 	}

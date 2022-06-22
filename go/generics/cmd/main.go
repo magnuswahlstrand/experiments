@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-	//lambda.Start(APIGatewayV2Adapter(HelloWorld))
-	http.HandleFunc("/hello", hello.Handler)
+	http.HandleFunc("/hello", hello.RPC.Handle)
 	http.ListenAndServe(":8080", nil)
 }
