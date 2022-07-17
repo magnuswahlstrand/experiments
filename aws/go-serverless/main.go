@@ -29,14 +29,14 @@ type Item struct {
 }
 
 func HandleRequest(ctx context.Context, request events.APIGatewayV2HTTPRequest) (string, error) {
-	_, seg := xray.BeginSegment(ctx, "AWSSDKV2_Dynamodb")
+	ctx, seg := xray.BeginSubsegment(ctx, "INSIDE HANDLER")
 	defer seg.Close(nil)
 
-	_, subSeg := xray.BeginSubsegment(ctx, "subsegment-anme")
+	_, subSeg := xray.BeginSubsegment(ctx, "MAKE REQUEST TO SOMEWHERE")
 	subSeg.Close(nil)
 
-	_, subSeg2 := xray.BeginSubsegment(ctx, "subsegment-anme-error")
-	subSeg2.Close(errors.New("something bad happened"))
+	_, subSeg2 := xray.BeginSubsegment(ctx, "FAILING REQUEST")
+	subSeg2.Close(errors.New("something bad happened :-("))
 
 	b2, _ := json.MarshalIndent(request, "", "  ")
 	fmt.Println(string(b2))
