@@ -1,0 +1,50 @@
+{
+  "name": "beesandbombs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "xstate": "xstate typegen \"*.tsx\" --watch"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.32.3",
+    "@react-three/fiber": "^8.7.4",
+    "@react-three/postprocessing": "^2.6.2",
+    "@react-three/rapier": "^0.7.2",
+    "@xstate/cli": "^0.3.3",
+    "@xstate/react": "^3.0.1",
+    "leva": "^0.9.31",
+    "maath": "^0.4.2",
+    "miniplex": "^1.0.0",
+    "miniplex-react": "^1.0.0",
+    "nice-color-palettes": "^3.0.0",
+    "r3f-stage": "^0.3.5",
+    "random-words": "^1.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "shader-composer-r3f": "^0.4.5",
+    "three": "^0.144.0",
+    "xstate": "^4.33.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.19.1",
+    "@storybook/addon-actions": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.12",
+    "@storybook/addon-interactions": "^6.5.12",
+    "@storybook/addon-links": "^6.5.12",
+    "@storybook/builder-vite": "^0.2.2",
+    "@storybook/react": "^6.5.12",
+    "@storybook/testing-library": "^0.0.13",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
+    "@types/three": "^0.144.0",
+    "@vitejs/plugin-react": "^2.1.0",
+    "babel-loader": "^8.2.5",
+    "prettier": "^2.7.1",
+    "typescript": "^4.6.4",
+    "vite": "^3.1.0"
+  }
+}
