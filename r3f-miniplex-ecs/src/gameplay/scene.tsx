@@ -4,6 +4,7 @@ import { AgeSystem } from "./systems/AgeSystem";
 import { TestSystem } from "./systems/TestSystem";
 import { SpawnerSystem } from "./systems/SpawnerSystem";
 import { ECSFlushSystem } from "./systems/FlushSystem";
+import Player from "./models/Player";
 
 // https://github.com/hmans/composer-suite/blob/main/apps/spacerage/src/scenes/gameplay/Bullets.tsx
 // export const Bullets = () => (
@@ -34,22 +35,19 @@ const EnemyShips = () => (
   </ECS.ArchetypeEntities>
 )
 
-const Player = () => (
+const Player2 = () => (
   <ECS.Entity>
     <ECS.Component name="position" data={{ x: 2, y: 2, z: 0 }} />
     <ECS.Component name="health" data={100} />
     <ECS.Component name="three">
-      <mesh>
-        <sphereGeometry />
-        <meshStandardMaterial color="hotpink" />
-      </mesh>
+      <Player/>
     </ECS.Component>
   </ECS.Entity>
 );
 
 export function Scene() {
   return <>
-    <Player />
+    <Player2 />
     <EnemyShips/>
     <AgeSystem />
     <DestroyAfterSystem />

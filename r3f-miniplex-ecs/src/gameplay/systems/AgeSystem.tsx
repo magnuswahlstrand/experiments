@@ -8,7 +8,6 @@ export const AgeSystem = () => {
   useFrame((_, dt) => {
     for (const entity of entities) {
       entity.age += dt;
-      console.log(entity.age)
     }
   }, RenderPriority);
 

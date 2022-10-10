@@ -12,7 +12,7 @@ type Entity = {
 
   color?: string
   initialPosition?: [number, number, number]
-  radius: number
+  radius?: number
 }
 
 export const ECS = createECS<Entity>();

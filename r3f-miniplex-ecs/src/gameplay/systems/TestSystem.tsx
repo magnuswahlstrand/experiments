@@ -7,7 +7,6 @@ export const TestSystem = () => {
 
   useFrame(() => {
     for (const entity of entities) {
-      entity.three.position.x += 0.002;
     }
   }, RenderPriority);
 
