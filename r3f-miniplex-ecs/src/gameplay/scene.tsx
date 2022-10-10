@@ -17,14 +17,20 @@ import { ECSFlushSystem } from "./systems/FlushSystem";
 //   </InstancedParticles>
 // )
 
+
+
 const EnemyShips = () => (
   <ECS.ArchetypeEntities archetype={"sphere"}>
-    <ECS.Component name="three">
-      <mesh>
-        <sphereGeometry />
-        <meshStandardMaterial color="red" />
-      </mesh>
-    </ECS.Component>
+    {(entity) => {
+      return <ECS.Entity entity={entity}>
+        <ECS.Component name="three">
+          <mesh position={entity.initialPosition ?? [3*(Math.random()-0.5),3*(Math.random()-0.5),0]}>
+            <sphereGeometry args={[entity.radius ??  0.5]} />
+            <meshStandardMaterial color={entity.color} />
+          </mesh>
+        </ECS.Component>
+      </ECS.Entity>
+    }}
   </ECS.ArchetypeEntities>
 )
 
