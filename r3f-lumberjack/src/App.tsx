@@ -8,12 +8,12 @@ import { OrbitControls } from "@react-three/drei";
 
 function App() {
   return (
-    <Canvas camera={{ position: [5, 7, 5] }}>
+    <Canvas camera={{ position: [5*5, 7*5, 5*5] }}>
       <ambientLight />
       <directionalLight position={[10, 10, 5]} />
       <pointLight position={[-10, 10, -5]} />
       <Physics>
-        {/*<Debug />*/}
+        <Debug />
         <Scene />
       </Physics>
       <OrbitControls />

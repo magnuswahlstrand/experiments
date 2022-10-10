@@ -2,11 +2,12 @@ import { useFrame } from "@react-three/fiber";
 import { ECS } from "../state";
 import { RenderPriority } from "./render";
 
-export const TestSystem = () => {
-  const entities = ECS.world.archetype("three");
+export const AgeSystem = () => {
+  const entities = ECS.world.archetype("age");
 
-  useFrame(() => {
+  useFrame((_, dt) => {
     for (const entity of entities) {
+      entity.age += dt;
     }
   }, RenderPriority);
 

@@ -1,10 +1,16 @@
 import { ECS } from "./state";
 import { DestroyAfterSystem } from "./systems/DestroyAfterSystem";
 import { AgeSystem } from "./systems/AgeSystem";
-import { TestSystem } from "./systems/TestSystem";
-import { SpawnerSystem } from "./systems/SpawnerSystem";
 import { ECSFlushSystem } from "./systems/FlushSystem";
 import Player from "./models/Player";
+import { CapsuleCollider, RigidBody } from "@react-three/rapier";
+import { Tag } from "miniplex";
+import { PlayerAutomaticSystem } from "./systems/PlayerAutomaticSystem";
+import { useEffect } from "react";
+import { Plane } from "@react-three/drei";
+import { spawnBall } from "./entities/balls";
+import { SpawnerSystem } from "./systems/SpawnerSystem";
+import { PlayerSystem } from "./systems/PlayerSystem";
 
 // https://github.com/hmans/composer-suite/blob/main/apps/spacerage/src/scenes/gameplay/Bullets.tsx
 // export const Bullets = () => (
@@ -18,42 +24,62 @@ import Player from "./models/Player";
 //   </InstancedParticles>
 // )
 
+const Balls = () => {
+  useEffect(() => {
+    const n = 20;
+    for (let i = 0; i < n; i++) {
+      const x = i - n / 2;
+      const y = 3;
+      const z = 0;
+      const r = Math.random() * 0.25 + 0.5;
+      spawnBall({ position: [x, y, z], radius: r });
+    }
+  }, []);
 
 
-const EnemyShips = () => (
-  <ECS.ArchetypeEntities archetype={"sphere"}>
-    {(entity) => {
-      return <ECS.Entity entity={entity}>
-        <ECS.Component name="three">
-          <mesh position={entity.initialPosition ?? [3*(Math.random()-0.5),3*(Math.random()-0.5),0]}>
-            <sphereGeometry args={[entity.radius ??  0.5]} />
-            <meshStandardMaterial color={entity.color} />
-          </mesh>
-        </ECS.Component>
-      </ECS.Entity>
-    }}
-  </ECS.ArchetypeEntities>
-)
+  return (<ECS.ArchetypeEntities archetype={"sphere"}>
+    {(entity) => <ECS.Entity entity={entity}>{entity.jsx}</ECS.Entity>}
+  </ECS.ArchetypeEntities>);
+};
+
+const Bullets = () => {
+  return (<ECS.ArchetypeEntities archetype={"bullet"}>
+    {(entity) => <ECS.Entity entity={entity}>{entity.bullet}</ECS.Entity>}
+  </ECS.ArchetypeEntities>);
+};
 
 const Player2 = () => (
   <ECS.Entity>
-    <ECS.Component name="position" data={{ x: 2, y: 2, z: 0 }} />
-    <ECS.Component name="health" data={100} />
-    <ECS.Component name="three">
-      <Player/>
+    <ECS.Component name="player" data={Tag} />
+    <ECS.Component name="rigidBody">
+      <RigidBody colliders={false} type={"kinematicPosition"}>
+        <CapsuleCollider args={[0.2, 0.8]} position={[0, 1, 0]} />
+        <Player scale={4} rotation={[0, Math.PI / 2, 0]} />
+      </RigidBody>
     </ECS.Component>
   </ECS.Entity>
 );
 
+const Floor = () => (<RigidBody>
+  <Plane args={[20, 20]} rotation={[-Math.PI / 2, 0, 0]}>
+    <meshStandardMaterial color={"hotpink"} />
+  </Plane>
+</RigidBody>);
+
 export function Scene() {
+
   return <>
     <Player2 />
-    <EnemyShips/>
+    <Balls />
+    <Bullets />
+    <Floor />
+
     <AgeSystem />
     <DestroyAfterSystem />
-    <TestSystem />
+    <PlayerAutomaticSystem />
 
     <SpawnerSystem />
-    <ECSFlushSystem/>
+    <PlayerSystem />
+    <ECSFlushSystem />
   </>;
 }
