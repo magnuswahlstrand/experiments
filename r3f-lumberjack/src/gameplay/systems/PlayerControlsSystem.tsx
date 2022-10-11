@@ -15,19 +15,17 @@ export const PlayerControlsSystem = () => {
 
 
   useFrame(({ clock }) => {
-    if (entities.entities.length === 0) return;
-    const player = entities.entities[0];
+    const [player] = entities.entities;
 
     if (!player.rigidBody) return;
 
+    const angleOffset = Math.PI/2;
+
+
     let dAV = 0;
     let dV = 0;
-    // const up = true
-    // const down = false
-    // const left = false
-    // const right = false
     const { up, down, left, right } = state
-    console.log()
+
 
     dV += up ? acc : 0;
     dV += down ? -acc : 0;
@@ -36,6 +34,7 @@ export const PlayerControlsSystem = () => {
 
     // TODO: Reuse vector v
     const dAVV = new Vector3(0, dAV, 0);
+    dAVV.multiplyScalar(0.8)
     player.rigidBody.setAngvel(dAVV);
     // TODO: refactor?
     const v = player.rigidBody.linvel();
@@ -49,6 +48,7 @@ export const PlayerControlsSystem = () => {
 
     // Return vy
     v.y = vy;
+    v.multiplyScalar(0.95)
     player.rigidBody.setLinvel(v);
   });
 

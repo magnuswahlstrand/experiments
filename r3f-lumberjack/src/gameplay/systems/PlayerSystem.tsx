@@ -27,9 +27,6 @@ export const PlayerSystem = () => {
     spawnBullet(v ,rotation, [1,0,0])
   });
 
-  useFrame(() => {
-
-  }, RenderPriority);
 
   return null;
 };

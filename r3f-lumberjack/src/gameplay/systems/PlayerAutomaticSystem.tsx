@@ -3,7 +3,7 @@ import { ECS } from "../state";
 import { RenderPriority } from "./render";
 import { Quaternion, Vector3 } from "three";
 
-const R = 5;
+const R = 7;
 
 const pos = new Vector3();
 const rotation = new Quaternion();
@@ -13,27 +13,24 @@ export const PlayerAutomaticSystem = () => {
 
 
   useFrame(({ clock }) => {
-    if (entities.entities.length === 0) return;
-    const player = entities.entities[0];
+    const [player] = entities.entities;
+
 
     if (!player.rigidBody) return;
 
-    const t = 2*clock.getElapsedTime();
+    const t = 2*clock.getElapsedTime()/2;
     const x = R*Math.cos(t);
     const z = R*Math.sin(t);
 
-    // pos.setX(x)
-    // pos.setZ(z)
-    rotation.setFromAxisAngle(yAxis, -t-Math.PI/2)
+    pos.setX(x)
+    pos.setZ(z)
+    rotation.setFromAxisAngle(yAxis, -t)
 
     player.rigidBody.setNextKinematicTranslation(pos);
     player.rigidBody.setNextKinematicRotation(rotation);
 
   });
 
-  useFrame(() => {
-
-  }, RenderPriority);
 
   return null;
 };
