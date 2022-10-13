@@ -1,11 +1,9 @@
 import {useFrame} from "@react-three/fiber";
 import {ECS} from "../state";
-import {growRate} from "../Tree";
-
 
 
 const collided = ECS.world.archetype("collided");
-export const PickupSystem = () => {
+export const DestroySystem = () => {
 
     useFrame(({}) => {
         for (let i = collided.entities.length; i > 0; i--) {

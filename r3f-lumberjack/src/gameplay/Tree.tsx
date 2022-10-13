@@ -36,3 +36,13 @@ export const spawnTree = (x: number, y: number) => {
         </RigidBody>)
     })
 }
+
+export function spawnTrees() {
+    const distance = 1
+    const n = 20
+    for (let x = 0; x < n; x++) {
+        for (let y = 0; y < n; y++) {
+            spawnTree(distance * x - n / 2, distance * y - n / 2);
+        }
+    }
+}
