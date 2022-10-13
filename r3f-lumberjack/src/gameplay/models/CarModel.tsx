@@ -6,6 +6,7 @@ import React, {useRef} from 'react'
 import {useGLTF,} from '@react-three/drei'
 
 
+// @ts-ignore
 export default function Model(props) {
     const group = useRef()
     const {
@@ -15,7 +16,9 @@ export default function Model(props) {
     return (
         <group ref={group} {...props} dispose={null}>
             <group scale={0.1}>
+                {/*@ts-ignore*/}
                 <mesh geometry={nodes.Cylinder018_Cylinder007.geometry} material={materials.Car} castShadow/>
+                {/*@ts-ignore*/}
                 <mesh geometry={nodes.Cylinder018_Cylinder007_1.geometry} material={materials.Windshield} castShadow/>
             </group>
 

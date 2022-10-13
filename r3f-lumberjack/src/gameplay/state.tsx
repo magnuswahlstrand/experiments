@@ -15,6 +15,8 @@ type Entity = {
   },
   collided?: boolean
   sceneObject?: Object3D
+
+  smoke?: JSX.Element
 }
 
 export const ECS = createECS<Entity>();

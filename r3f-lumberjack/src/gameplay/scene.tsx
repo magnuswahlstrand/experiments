@@ -8,6 +8,8 @@ import {Player} from "./entities/player";
 import {PickupSystem} from "./systems/PickupSystem";
 import {OTHER} from "./common/collisionGroups";
 import {PlayerControlsSystem} from "./systems/PlayerControlsSystem";
+import {SmokeVFX, spawnSmokeVFX} from "./vfx/Simple";
+import {Vector3} from "three";
 
 const Floor = () => (<RigidBody collisionGroups={interactionGroups(OTHER, [])}>
     <Plane args={[20, 20]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
@@ -30,15 +32,16 @@ export function Scene() {
 
     useEffect(() => {
         spawnTrees();
+
+        spawnSmokeVFX({position: new Vector3(0, 0, 0)});
     }, []);
 
     return <>
         <Trees/>
         <Floor/>
         <Player/>
-        {/*<group>*/}
-        {/*    <CarModel/>*/}
-        {/*</group>*/}
+
+        <SmokeVFX/>
 
         <GrowSystem/>
         <PickupSystem/>

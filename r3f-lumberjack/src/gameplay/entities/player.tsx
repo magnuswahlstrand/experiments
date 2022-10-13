@@ -2,6 +2,7 @@ import {ECS} from "../state";
 import {Tag} from "miniplex";
 import {RigidBody} from "@react-three/rapier";
 import CarModel from "../models/CarModel";
+import {Simple, SmokeVFX} from "../vfx/Simple";
 
 export const Player = () => (
     <ECS.Entity>
@@ -10,7 +11,7 @@ export const Player = () => (
             {/*<RigidBody type={"kinematicPosition"}>*/}
             <RigidBody type={"kinematicVelocity"}>
                 <group>
-                    <CarModel position={[0, 0.6, 0]} rotation={[0,Math.PI/2,0]}/>
+                    <CarModel position={[0, 0.6, 0]} rotation={[0, Math.PI / 2, 0]}/>
                 </group>
             </RigidBody>
         </ECS.Component>
