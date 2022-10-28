@@ -1,0 +1,11 @@
+Model Information:
+* title:	White T-Shirt
+* source:	https://sketchfab.com/3d-models/white-t-shirt-3f98e641831b41ccb1807d0f68cc51dc
+* author:	hazelmatthews (https://sketchfab.com/hazelmatthews)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "White T-Shirt" (https://sketchfab.com/3d-models/white-t-shirt-3f98e641831b41ccb1807d0f68cc51dc) by hazelmatthews (https://sketchfab.com/hazelmatthews) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
