@@ -20,32 +20,29 @@ type GLTFResult = GLTF & {
     }
 }
 
-export function Model(props: JSX.IntrinsicElements['group']) {
+interface Props {
+    color: THREE.color
+    textureIndex: number
+}
+
+export function Model(props: Props) {
+    const textures = useTexture(["/textures/pink-logo.png", "/textures/boards.jpg"])
     const {nodes, materials} = useGLTF('/scene2.gltf') as GLTFResult
     // const texture = useTexture('./texture.jpg')
 
-    const [color, setColor] = useState(new THREE.Color("purple"));
 
-
-    const updateColor = () => {
-        setColor(new THREE.Color("white"));
-        // materials.Default_OBJ.color = new THREE.Color("red")
-        // materials.Default_OBJ.needs_update = true
-    }
-
-    const texture = useTexture('./textures/pink-logo.png')
     return (
         <group {...props} dispose={null} scale={0.00002}>
             <mesh castShadow receiveShadow
                   geometry={nodes.mesh_0.geometry}
                   material={materials.Default_OBJ}
-                  material-color={color}
+                  material-color={props.color}
                   position={[0, -5000, 0]}
-                  onClick={updateColor}
+                  // onClick={updateColor}
             >
                 <Decal
 
-                    debug // Makes "bounding box" of the decal visible
+                    // debug // Makes "bounding box" of the decal visible
                     position={[6700, 11500, 5000]} // Position of the decal
                     rotation={[0, 0, 0]} // Rotation of the decal (can be a vector or a degree in radians)
                     scale={5000} // Scale of the decal
@@ -57,7 +54,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
                         // color="red"
                         transparent
 
-                        map={texture}
+                        map={textures[props.textureIndex]}
                     />
                 </Decal>
             </mesh>
