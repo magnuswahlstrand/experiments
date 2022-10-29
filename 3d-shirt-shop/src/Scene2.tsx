@@ -7,7 +7,7 @@ title: White T-Shirt
 */
 
 import * as THREE from 'three'
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Decal, useGLTF, useTexture} from '@react-three/drei'
 import {GLTF} from 'three-stdlib'
 
@@ -22,13 +22,26 @@ type GLTFResult = GLTF & {
 
 export function Model(props: JSX.IntrinsicElements['group']) {
     const {nodes, materials} = useGLTF('/scene2.gltf') as GLTFResult
-    const texture = useTexture('./texture.jpg')
+    // const texture = useTexture('./texture.jpg')
+
+    const [color, setColor] = useState(new THREE.Color("purple"));
+
+
+    const updateColor = () => {
+        setColor(new THREE.Color("white"));
+        // materials.Default_OBJ.color = new THREE.Color("red")
+        // materials.Default_OBJ.needs_update = true
+    }
+
+    const texture = useTexture('./textures/pink-logo.png')
     return (
         <group {...props} dispose={null} scale={0.00002}>
             <mesh castShadow receiveShadow
                   geometry={nodes.mesh_0.geometry}
                   material={materials.Default_OBJ}
+                  material-color={color}
                   position={[0, -5000, 0]}
+                  onClick={updateColor}
             >
                 <Decal
 
@@ -42,6 +55,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
                         polygonOffset polygonOffsetFactor={-10}
                         // debug
                         // color="red"
+                        transparent
 
                         map={texture}
                     />
