@@ -7,8 +7,9 @@ title: White T-Shirt
 */
 
 import * as THREE from 'three'
-import React, {ForwardedRef, useEffect, useRef} from 'react'
-import {Decal, Html, useGLTF, useTexture} from '@react-three/drei'
+import {Color} from 'three'
+import {useMemo} from 'react'
+import {Decal, useGLTF, useTexture} from '@react-three/drei'
 import {GLTF} from 'three-stdlib'
 
 type GLTFResult = GLTF & {
@@ -21,46 +22,28 @@ type GLTFResult = GLTF & {
 }
 
 interface Props {
-    // color: string
-    // textureIndex: number
+    color: string
+    artworkUrl: string
 }
 
-export const Model = React.forwardRef((props: Props, ref: ForwardedRef<THREE.Mesh>) => {
-//     <button ref={ref} className="FancyButton">
-//         {props.children}
-//     </button>
-// ));
-//
-// export function Model(props: Props) {
-    const textures = useTexture(["/textures/pink-logo.png", "/textures/boards.jpg"])
-    const {nodes, materials} = useGLTF('/scene2.gltf') as GLTFResult
-    // const texture = useTexture('./texture.jpg')
 
-    // const ref = useRef<THREE.Mesh>(null!)
-    useEffect(() => {
-        // if (!shirtRef.current) return;
-        // // console.log(shirtRef.mesh)
-        // ref.current.material.color = new THREE.Color(props.color);
-        // ref.current
-        // shirtRef.current.material.mustUpdate = true
-        // shirtRef.current.material.must_update = true;
-        console.log(ref.current.position)
-        // console.log("color",props.color)
-    }, []);
-    console.log(ref)
+export function Model(props: Props) {
+    const decalTexture = useTexture(props.artworkUrl)
+    // @ts-ignore
+    const {nodes, materials} = useGLTF('/scene2.gltf') as GLTFResult
+    const color = useMemo(() => {
+        return new Color(props.color)
+    }, [props.color]);
 
     return (
         <group dispose={null} position={[0, -2, 0]}>
             <mesh castShadow receiveShadow
                   geometry={nodes.mesh_0.geometry}
                   material={materials.Default_OBJ}
-                // material-color={props.color}
+                  material-color={color}
                   scale={0.00005}
-                  ref={ref}
-                // onClick={updateColor}
             >
                 <Decal
-
                     // debug // Makes "bounding box" of the decal visible
                     position={[6700, 11500, 5000]} // Position of the decal
                     rotation={[0, 0, 0]} // Rotation of the decal (can be a vector or a degree in radians)
@@ -68,17 +51,15 @@ export const Model = React.forwardRef((props: Props, ref: ForwardedRef<THREE.Mes
                 >
 
                     <meshStandardMaterial
-                        polygonOffset polygonOffsetFactor={-10}
-                        // debug
-                        // color="red"
+                        polygonOffset
+                        polygonOffsetFactor={-10}
                         transparent
-
-                        map={textures[0]}
+                        map={decalTexture}
                     />
                 </Decal>
             </mesh>
         </group>
     )
-})
+}
 
 useGLTF.preload('/scene2.gltf')

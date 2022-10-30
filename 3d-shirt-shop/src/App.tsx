@@ -1,9 +1,8 @@
 import {Canvas} from "@react-three/fiber";
 
-import {Backdrop, Loader, OrbitControls, Stage, useTexture} from "@react-three/drei";
+import {Backdrop, Loader, PresentationControls, Stage, useTexture} from "@react-three/drei";
 import {Model as Shirt2} from "./Shirt1";
-import {useRef, useState} from "react";
-import * as THREE from "three";
+import {useState} from "react";
 
 
 function Lights() {
@@ -14,30 +13,35 @@ function Lights() {
     </>;
 }
 
-function ColorPicker(props: { selected: number, onChange: (number) => void }) {
+function ColorPicker(props: { currentColor: string, onChange: (number) => void }) {
     return <div>
-            <div className="font-bold text-xl mb-1">Color</div>
-            {colors.map((color, index) => (
-                <div key={index}
-                     className={`w-16 h-16 rounded bg-black inline-block mr-2 border-2 border-gray-900 ${index === props.selected ? "border-blue-700" : ""}`}
-                     style={{backgroundColor: color}}
-                     onClick={() => props.onChange(index)}/>
-            ))}
-        </div>
+        <div className="font-bold text-xl mb-1">Color</div>
+        {colors.map((color, index) => {
+                const selected = color === props.currentColor;
+                return <div key={index}
+                            className={`w-16 h-16 rounded bg-black inline-block mr-2 border-2 border-gray-900 ${selected ? "border-blue-700" : ""}`}
+                            style={{backgroundColor: color}}
+                            onClick={() => props.onChange(color)}/>
+            }
+        )}
+    </div>
 }
 
-function ArtworkPicker(props: { selected: number, onChange: (number) => void }) {
+function ArtworkPicker(props: { currentUrl: string, onChange: (url: string) => void }) {
     return <div>
-            <div className="font-bold text-xl mb-1">Artwork</div>
-            {textureNames.map((textureName, index) => (
-                <img key={index}
-                     alt={textureName}
-                     src={`/textures/${textureName}`}
-                     className={`w-16 h-16 rounded bg-white inline-block mr-2 border-2 border-gray-900 ${index === props.selected ? "border-blue-700" : ""}`}
-                    // style={{backgroundImage: `url('/textures/${textureName}')`}}
-                     onClick={() => props.onChange(index)}/>
-            ))}
-        </div>
+        <div className="font-bold text-xl mb-1">Artwork</div>
+        {textureUrls.map((url, index) => {
+                const selected = url === props.currentUrl;
+                return (<img key={index}
+                             alt={url}
+                             src={url}
+                             className={`w-16 h-16 rounded bg-white inline-block mr-2 border-2 border-gray-900 ${selected ? "border-blue-700" : ""}`}
+                             onClick={() => {
+                                 props.onChange(url)
+                             }}/>)
+            }
+        )}
+    </div>
 }
 
 
@@ -61,77 +65,46 @@ const colors = [
     "#1983a3",
 ]
 
-const textureNames = [
-    "pink-logo.png",
-    "boards.jpg",
+const textureUrls = [
+    "/textures/pink-logo.png",
+    "/textures/boards.jpg",
+    "/textures/corgi.png",
+    "/textures/3d.png",
+    "/textures/space.png",
 ]
 
+for (const textureUrl of textureUrls) {
+    useTexture.preload(textureUrl)
+}
 
 function App() {
-    const [colorIndex, setColorIndex] = useState(0);
-    const [textureIndex, setTextureIndex] = useState(0);
-    // const textureName = textures[textureIndex];
-
-    const shirtRef = useRef<THREE.Mesh>(null);
-
-    // useEffect(() => {
-    //     if (!shirtRef.current) return;
-    //     // console.log(shirtRef.mesh)
-    //     shirtRef.current.material.color = new THREE.Color(colors[colorIndex]);
-    //     shirtRef.current.material.mustUpdate = true
-    //     shirtRef.current.material.must_update = true;
-    //     console.log(shirtRef.current.material.color)
-    // }, [colorIndex]);
-
-    const setTexture = (index: number) => {
-        console.log("setColor", colors[index])
-        shirtRef.current.material.color = new THREE.Color(colors[index]);
-        shirtRef.current.material.needsUpdate = true
-        setTextureIndex(index);
-    }
-
-    const setColor = (index: number) => {
-        console.log("setColor", colors[index])
-        shirtRef.current.material.color = new THREE.Color(colors[index]);
-        shirtRef.current.material.needsUpdate = true
-        setColorIndex(index);
-    }
+    const [color, setColor] = useState(colors[0]);
+    const [artworkUrl, setArtworkUrl] = useState("textures/pink-logo.png");
 
     return (
         <>
             <Canvas camera={{position: [0, 0, 1], fov: 45}} shadows>
                 <color attach="background" args={['pink']}/>
                 <Lights/>
-                {/*<SceneBackdrop/>*/}
-                {/*<PresentationControls*/}
-                {/*    cursor={true} // Whether to toggle cursor style on drag*/}
-                {/*    global*/}
-                {/*    snap={true} // Snap-back to center (can also be a spring config)*/}
-                {/*    speed={1} // Speed factor*/}
-                {/*    polar={[-Math.PI / 12, Math.PI / 12]} // Vertical limits*/}
-                {/*    azimuth={[-Infinity, Infinity]} // Horizontal limits*/}
-                {/*    // config={{ mass: 1, tension: 170, friction: 26 }} // Spring config*/}
-                {/*    enabled={false}*/}
-                {/*>*/}
-                {/*<Float floatingRange={[-0.5, -0.48]} speed={10} rotationIntensity={0.1}>*/}
-                <Stage intensity={0.2} environment="city" preset="rembrandt" position={[0, -2, 0]}>
-                    {/*<Center position={[0,0,0]}>*/}
-
-                    <Shirt2 ref={shirtRef}/>
-                    {/*textureIndex={textureIndex} color={colors[colorIndex]}/>*/}
-                    {/*</Center>*/}
-                </Stage>
-                {/*</Float>*/}
-                {/*</PresentationControls>*/}
-                <OrbitControls/>
-                <axesHelper/>
+                <SceneBackdrop/>
+                <PresentationControls
+                    cursor global snap
+                    polar={[-Math.PI / 12, Math.PI / 12]} // Vertical limits
+                >
+                    {/*<Float floatingRange={[-0.5, -0.48]} speed={10} rotationIntensity={0.1}>*/}
+                    <Stage intensity={0.2} environment="city" preset="rembrandt" position={[0, -2, 0]}>
+                        <Shirt2 artworkUrl={artworkUrl} color={color}/>
+                    </Stage>
+                    {/*</Float>*/}
+                </PresentationControls>
+                {/*<axesHelper/>*/}
             </Canvas>
             <Loader/>
 
             <div className="absolute bottom-0 left-0 right-0">
                 <div className="w-96 mx-auto bg-white p-3 pb-1 z-100 border-black rounded-t-xl flex flex-col space-y-2">
-                    <ArtworkPicker selected={textureIndex} onChange={setTexture}/>
-                    <ColorPicker selected={colorIndex} onChange={setColor}/>
+                    <ArtworkPicker currentUrl={artworkUrl} onChange={setArtworkUrl}/>
+                    <ColorPicker currentColor={color} onChange={setColor}/>
                 </div>
             </div>
         </>
