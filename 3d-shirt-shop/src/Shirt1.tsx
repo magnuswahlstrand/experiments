@@ -7,8 +7,8 @@ title: White T-Shirt
 */
 
 import * as THREE from 'three'
-import React, {useEffect, useState} from 'react'
-import {Decal, useGLTF, useTexture} from '@react-three/drei'
+import React, {ForwardedRef, useEffect, useRef} from 'react'
+import {Decal, Html, useGLTF, useTexture} from '@react-three/drei'
 import {GLTF} from 'three-stdlib'
 
 type GLTFResult = GLTF & {
@@ -21,24 +21,43 @@ type GLTFResult = GLTF & {
 }
 
 interface Props {
-    color: THREE.color
-    textureIndex: number
+    // color: string
+    // textureIndex: number
 }
 
-export function Model(props: Props) {
+export const Model = React.forwardRef((props: Props, ref: ForwardedRef<THREE.Mesh>) => {
+//     <button ref={ref} className="FancyButton">
+//         {props.children}
+//     </button>
+// ));
+//
+// export function Model(props: Props) {
     const textures = useTexture(["/textures/pink-logo.png", "/textures/boards.jpg"])
     const {nodes, materials} = useGLTF('/scene2.gltf') as GLTFResult
     // const texture = useTexture('./texture.jpg')
 
+    // const ref = useRef<THREE.Mesh>(null!)
+    useEffect(() => {
+        // if (!shirtRef.current) return;
+        // // console.log(shirtRef.mesh)
+        // ref.current.material.color = new THREE.Color(props.color);
+        // ref.current
+        // shirtRef.current.material.mustUpdate = true
+        // shirtRef.current.material.must_update = true;
+        console.log(ref.current.position)
+        // console.log("color",props.color)
+    }, []);
+    console.log(ref)
 
     return (
-        <group {...props} dispose={null} scale={0.00002}>
+        <group dispose={null} position={[0, -2, 0]}>
             <mesh castShadow receiveShadow
                   geometry={nodes.mesh_0.geometry}
                   material={materials.Default_OBJ}
-                  material-color={props.color}
-                  position={[0, -5000, 0]}
-                  // onClick={updateColor}
+                // material-color={props.color}
+                  scale={0.00005}
+                  ref={ref}
+                // onClick={updateColor}
             >
                 <Decal
 
@@ -54,12 +73,12 @@ export function Model(props: Props) {
                         // color="red"
                         transparent
 
-                        map={textures[props.textureIndex]}
+                        map={textures[0]}
                     />
                 </Decal>
             </mesh>
         </group>
     )
-}
+})
 
 useGLTF.preload('/scene2.gltf')
